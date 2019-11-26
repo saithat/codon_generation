@@ -1,15 +1,19 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
+# To add a new cell, type '# %%'
+# To add a new markdown cell, type '# %% [markdown]'
+# %% Change working directory from the workspace root to the ipynb file location. Turn this addition off with the DataScience.changeDirOnImportExport setting
+# ms-python.python added
+import os
+try:
+	os.chdir(os.path.join(os.getcwd(), 'codon_generation'))
+	print(os.getcwd())
+except:
+	pass
+# %%
 from random import *
+import csv
 
 
-# In[2]:
-
-
+# %%
 DNA_codon_table = [
         ("ATG","M/Start"), ("ATA","I"), ("ATC","I"), ("ATT","I"), ("ACG","T"), ("ACA","T"),
         ("ACC","T"), ("ACT", "T"), ("AAG","K"), ("AAA","K"), ("AAC","N"), ("AAT","N"),
@@ -26,15 +30,11 @@ DNA_codon_table = [
 stop = ["TAG", "TAA", "TGA"]
 
 
-# In[3]:
-
-
+# %%
 len(DNA_codon_table)
 
 
-# In[4]:
-
-
+# %%
 def create_protein(aminos, seq_length):
     protein = []
     for j in range(0, seq_length):  #generating one specific protein sequence
@@ -42,9 +42,7 @@ def create_protein(aminos, seq_length):
     return protein
 
 
-# In[5]:
-
-
+# %%
 def num_comb(val, codon_dict):
     pos_comb = 0
     for key, value in codon_dict.items():
@@ -53,9 +51,7 @@ def num_comb(val, codon_dict):
     return pos_comb
 
 
-# In[6]:
-
-
+# %%
 def find_comb(val, codon_dict):
     combs = []
     for key, value in codon_dict.items():
@@ -64,9 +60,7 @@ def find_comb(val, codon_dict):
     return combs
 
 
-# In[7]:
-
-
+# %%
 def create_sequences(protein, num_seq):
     '''
         1. Protein sequence
@@ -121,9 +115,7 @@ def create_sequences(protein, num_seq):
     return sequence
 
 
-# In[8]:
-
-
+# %%
 def create_set(num_aminos, seq_length, num_classes, seq_per_class):
     s = ""
     if num_aminos < 3:
@@ -148,15 +140,28 @@ def create_set(num_aminos, seq_length, num_classes, seq_per_class):
     return classes
 
 
-# In[9]:
-
-
-create_set(20,10, 6, 8)
+# %%
+num_aminos = 64
+seq_length = 1500
+num_classes = 30
+seq_per_class = 10
+d = create_set(num_aminos, seq_length, num_classes, seq_per_class)
+key = [i for i in range(num_classes)]
 #list of tuples (x,y) where x is a string and y is index
+fout = str(num_aminos) + '_' + str(seq_length) + '_' + str(num_classes) + '_' + str(seq_per_class)
+print(fout)
+with open('data/data%s.csv' % fout, 'w') as f:
+#with open('data/64_30_30_10.csv', 'w') as f:
+    writer = csv.writer(f)
+    writer.writerow(key)
+    writer.writerows(zip(*d.values()))
+
+try:
+    myfile = open('data/data%s.csv' % fout, "r+") # or "a+", whatever you need
+except IOError:
+    print ("Could not open file!")
 
 
-# In[ ]:
-
-
+# %%
 
 
